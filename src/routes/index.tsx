@@ -55,7 +55,11 @@ function App() {
       })
 
       if (insertedText) {
-        setLines((prev) => [...prev, ...insertedText.trim().split('\n').filter(Boolean)])
+        setLines((prev) => {
+          const newLines = insertedText.trim().split('\n').filter(Boolean)
+          // Add an empty string at the end of each inserted block to act as a spacer
+          return prev.length === 0 ? newLines : [...prev, '', ...newLines]
+        })
 
         // Clean up the DOM to prevent it from growing infinitely
         nodesToRemove.forEach((node) => {
@@ -86,13 +90,13 @@ function App() {
           data-text="Start typing..."
         >
           {lines.map((line, i) => (
-            <div key={i}>{line}</div>
+            <div key={i} className={line === '' ? 'h-6 sm:h-8 md:h-10' : ''}>
+              {line}
+            </div>
           ))}
         </div>
       </div>
     </main>
   )
 }
-
-
 
