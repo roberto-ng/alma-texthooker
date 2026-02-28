@@ -99,7 +99,7 @@ function App() {
     <main className="min-h-screen bg-[#0f172a] selection:bg-indigo-500/30 flex justify-center px-6 py-12 sm:px-12 sm:py-24 transition-colors duration-500 relative">
       <Link
         to="/options"
-        className="absolute top-6 right-6 p-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 rounded-full transition-all"
+        className="fixed top-6 right-6 z-50 p-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 rounded-full transition-all"
         title="Settings"
       >
         <Settings size={28} />
