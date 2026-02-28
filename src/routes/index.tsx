@@ -110,7 +110,7 @@ function App() {
           ref={containerRef}
           contentEditable
           suppressContentEditableWarning
-          className="w-full min-h-[50vh] bg-transparent text-slate-100 text-2xl sm:text-3xl md:text-4xl font-medium tracking-wide leading-relaxed sm:leading-loose placeholder:text-slate-600 outline-none font-sans"
+          className={`w-full min-h-[50vh] bg-transparent text-slate-100 text-2xl sm:text-3xl md:text-4xl font-medium tracking-wide leading-relaxed sm:leading-loose placeholder:text-slate-600 outline-none font-sans ${mlpMode ? 'pr-40 md:pr-35' : ''}`}
           data-text="Start typing..."
         >
           {lines.map((line, i) => (
