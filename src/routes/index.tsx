@@ -1,11 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useRef, useEffect, useState } from 'react'
+import { useAtomValue } from 'jotai'
+import { clearOnUpdatesAtom, clearOnUpdatesTimeframeAtom } from '../state/settings'
+import { Link } from '@tanstack/react-router'
+import { Settings } from 'lucide-react'
+
 
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [lines, setLines] = useState<string[]>([])
+  const [lines, setLines] = useState<{ text: string; timestamp: number }[]>([])
+
+  const clearOnUpdates = useAtomValue(clearOnUpdatesAtom)
+  const timeframe = useAtomValue(clearOnUpdatesTimeframeAtom)
 
   useEffect(() => {
     // Scroll to the bottom whenever text is updated
@@ -56,9 +64,16 @@ function App() {
 
       if (insertedText) {
         setLines((prev) => {
-          const newLines = insertedText.trim().split('\n').filter(Boolean)
+          const now = Date.now()
+          const newLines = insertedText.trim().split('\n').filter(Boolean).map(text => ({ text, timestamp: now }))
+
+          let keptPrev = prev;
+          if (clearOnUpdates) {
+            keptPrev = prev.filter(line => (now - line.timestamp) <= timeframe * 1000)
+          }
+
           // Add an empty string at the end of each inserted block to act as a spacer
-          return prev.length === 0 ? newLines : [...prev, '', ...newLines]
+          return keptPrev.length === 0 ? newLines : [...keptPrev, { text: '', timestamp: now }, ...newLines]
         })
 
         // Clean up the DOM to prevent it from growing infinitely
@@ -77,11 +92,19 @@ function App() {
     })
 
     return () => observer.disconnect()
-  }, [])
+  }, [clearOnUpdates, timeframe])
 
   return (
-    <main className="min-h-screen bg-[#0f172a] selection:bg-indigo-500/30 flex justify-center px-6 py-12 sm:px-12 sm:py-24 transition-colors duration-500">
-      <div className="w-full max-w-4xl">
+    <main className="min-h-screen bg-[#0f172a] selection:bg-indigo-500/30 flex justify-center px-6 py-12 sm:px-12 sm:py-24 transition-colors duration-500 relative">
+      <Link
+        to="/options"
+        className="absolute top-6 right-6 p-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 rounded-full transition-all"
+        title="Settings"
+      >
+        <Settings size={28} />
+      </Link>
+
+      <div className="w-full max-w-4xl pt-8">
         <div
           ref={containerRef}
           contentEditable
@@ -90,8 +113,8 @@ function App() {
           data-text="Start typing..."
         >
           {lines.map((line, i) => (
-            <div key={i} className={line === '' ? 'h-6 sm:h-8 md:h-10' : ''}>
-              {line}
+            <div key={i} className={line.text === '' ? 'h-6 sm:h-8 md:h-10' : ''}>
+              {line.text}
             </div>
           ))}
         </div>
