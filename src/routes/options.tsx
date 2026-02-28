@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useAtom } from 'jotai'
-import { clearOnUpdatesAtom, clearOnUpdatesTimeframeAtom } from '../state/settings'
+import { clearOnUpdatesAtom, clearOnUpdatesTimeframeAtom, mlpModeAtom } from '../state/settings'
 
 export const Route = createFileRoute('/options')({
     component: Options,
@@ -9,6 +9,7 @@ export const Route = createFileRoute('/options')({
 function Options() {
     const [clearOnUpdates, setClearOnUpdates] = useAtom(clearOnUpdatesAtom)
     const [timeframe, setTimeframe] = useAtom(clearOnUpdatesTimeframeAtom)
+    const [mlpMode, setMlpMode] = useAtom(mlpModeAtom)
 
     return (
         <main className="min-h-screen bg-[#0f172a] text-slate-100 flex flex-col items-center px-6 py-12 sm:px-12 sm:py-24 transition-colors duration-500 font-sans">
@@ -64,6 +65,22 @@ function Options() {
                             </p>
                         </div>
                     )}
+
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="text-xl font-semibold mb-1">MLP Mode</h2>
+                            <p className="text-slate-400 text-sm">Add a dancing pony to your screen.</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={mlpMode}
+                                onChange={(e) => setMlpMode(e.target.checked)}
+                            />
+                            <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                        </label>
+                    </div>
 
                 </div>
             </div>

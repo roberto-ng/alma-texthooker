@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useRef, useEffect, useState } from 'react'
 import { useAtomValue } from 'jotai'
-import { clearOnUpdatesAtom, clearOnUpdatesTimeframeAtom } from '../state/settings'
+import { clearOnUpdatesAtom, clearOnUpdatesTimeframeAtom, mlpModeAtom } from '../state/settings'
 import { Link } from '@tanstack/react-router'
 import { Settings } from 'lucide-react'
 
@@ -14,6 +14,7 @@ function App() {
 
   const clearOnUpdates = useAtomValue(clearOnUpdatesAtom)
   const timeframe = useAtomValue(clearOnUpdatesTimeframeAtom)
+  const mlpMode = useAtomValue(mlpModeAtom)
 
   useEffect(() => {
     // Scroll to the bottom whenever text is updated
@@ -119,6 +120,14 @@ function App() {
           ))}
         </div>
       </div>
+
+      {mlpMode && (
+        <img
+          src="/images/extra/dancing.gif"
+          alt="Dancing Pony"
+          className="fixed bottom-4 right-4 pointer-events-none z-50 mix-blend-screen w-32 md:w-48 opacity-80"
+        />
+      )}
     </main>
   )
 }
